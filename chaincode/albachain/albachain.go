@@ -52,7 +52,7 @@ func (t *Albachain) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	if fn == "addWorker" {
 		result, err = t.addWorker(stub, args)
 	} else if fn == "getWorker" {
-
+		result, err = t.getWorker(stub, args)
 	} else if fn == "addEmployer" {
 
 	} else if fn == "getEmployer" {
@@ -78,6 +78,15 @@ func (t *Albachain) addWorker(stub shim.ChaincodeStubInterface, args []string) (
 
 	if err != nil {return "", fmt.Errorf("Error during addWorker function")}
 	return string(valueAsBytes), nil
+}
+
+func (t *Albachain) getWorker(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+	if len(args) != 1 {return "", fmt.Errorf("Call getWorker failed")}
+
+	value, err := stub.GetState(args[0])
+	if err != nil {return "", fmt.Errorf("Failed to get worker: %s", err)}
+	if value == nil {return "", fmt.Errorf("Worker not found: %s", args[0])}
+	return string(value), nil
 }
 
 func main() {
