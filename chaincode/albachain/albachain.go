@@ -11,24 +11,26 @@ import (
 
 type Worker struct {
 	workerId string `json:"workerId"`
-	workplaceNumber []int `json:"workplaceNumberList"`
+	workerName string `json:"workerName"`
+	workplaceNumber []string `json:"workplaceNumberList"`
 }
 
 type Employer struct {
 	employerId string `json:"employerId"`
-	workplaceNumber []int `json:"workplaceNumberList"`
+	workplaceNumber []string `json:"workplaceNumberList"`
 }
 
 type Workplace struct {
-	workplaceNumber int `json:"workplaceNumber"`
+	workplaceNumber string `json:"workplaceNumber"`
 	employerId string `json:"employerId"`
 	worker []string `json:"workerList"`
 	wage int `json:"wage"`
 }
 
 type WorkHistory struct {
+	workHistoryNumber string `json:"workHistoryNumber"`
 	workerId string `json:"workerId"`
-	workplaceNumber int `json:"workplaceNumber"`
+	workplaceNumber string `json:"workplaceNumber"`
 	workStartTime string `json:"workStartTime"`
 	workFinishTime string `json:"workFinishTime"`
 	wage int `json:"wage"`
@@ -53,29 +55,29 @@ func (t *Albachain) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	} else if fn == "getWorker" {
 		result, err = t.getWorker(stub, args)
 	} else if fn == "addEmployer" {
-
+		result, err = t.addEmployer(stub, args)
 	} else if fn == "getEmployer" {
-
+		result, err = t.getEmployer(stub, args)
 	} else if fn == "addWorkplace" {
-
+		result, err = t.addWorkplace(stub, args)
 	} else if fn == "addWorkHistory" {
 
-	}
+	} else {return shim.Error(err.Error())}
 
 	if err != nil {return shim.Error(err.Error())}
 	return shim.Success([]byte(result))
 }
 
 func (t *Albachain) addWorker(stub shim.ChaincodeStubInterface, args []string) (string, error) {
-	if len(args) != 1 {return "", fmt.Errorf("Call addWorker failed")}
+	if len(args) != 2 {return "", fmt.Errorf("Call addWorker failed")}
 
 	/* duplicate check */
 	id, err := stub.GetState(args[0])
 	if err != nil {return "", fmt.Errorf("Failed to get worker: %s", err)}
 	if id != nil {return "", fmt.Errorf("This id already exists")}
 
-	var workplaceNumber []int
-	var value = Worker{workerId: args[0], workplaceNumber: workplaceNumber}
+	var wNumber []string
+	var value = Worker{workerId: args[0], workerName: args[1], workplaceNumber: wNumber}
 	valueAsBytes, _ := json.Marshal(value)
 	err2 := stub.PutState(args[0], valueAsBytes)
 
@@ -84,12 +86,56 @@ func (t *Albachain) addWorker(stub shim.ChaincodeStubInterface, args []string) (
 }
 
 func (t *Albachain) getWorker(stub shim.ChaincodeStubInterface, args []string) (string, error) {
-	if len(args) != 1 {return "", fmt.Errorf("Call getWorker failed")}
+	if len(args) != 1 {return "", fmt.Errorf("Failed to call addWorker")}
 
 	value, err := stub.GetState(args[0])
 	if err != nil {return "", fmt.Errorf("Failed to get worker: %s", err)}
 	if value == nil {return "", fmt.Errorf("Worker not found: %s", args[0])}
 	return string(value), nil
+}
+
+func (t *Albachain) addEmployer(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+	if len(args) != 1 {return "", fmt.Errorf("Failed to call addEmployer")}
+
+	/* duplicate check */
+	id, err := stub.GetState(args[0])
+	if err != nil {return "", fmt.Errorf("Failed to get employer: %s", err)}
+	if id != nil {return "", fmt.Errorf("This id already exists")}
+
+	var workplaceNumber []string
+	var value = Employer{employerId: args[0], workplaceNumber: workplaceNumber}
+	valueAsBytes, _ := json.Marshal(value)
+	err2 := stub.PutState(args[0], valueAsBytes)
+
+	if err2 != nil {return "", fmt.Errorf("Error during addEmployer function")}
+	return string(valueAsBytes), nil
+}
+
+func (t *Albachain) getEmployer(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+	if len(args) != 1 {return "", fmt.Errorf("Call getEmployer failed")}
+
+	value, err := stub.GetState(args[0])
+	if err != nil {return "", fmt.Errorf("Failed to get employer: %s", err)}
+	if value == nil {return "", fmt.Errorf("Employer not found: %s", args[0])}
+	return string(value), nil
+}
+
+func (t *Albachain) addWorkplace(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+	if len(args) != 2 {return "", fmt.Errorf("Call addWorkplace failed")}
+
+	workerAsBytes, err := stub.GetState(args[0])
+	if err != nil {return "", fmt.Errorf(err.Error())}
+	if workerAsBytes == nil {return "", fmt.Errorf("The wrong approach")}
+
+	worker := Worker{}
+	err = json.Unmarshal(workerAsBytes, &worker)
+	if err != nil {return "", fmt.Errorf(err.Error())}
+
+	worker.workplaceNumber = append(worker.workplaceNumber, args[1])
+	workerAsBytes, _ = json.Marshal(worker)
+	stub.PutState(args[0], workerAsBytes)
+
+	return string(args[1]), nil
 }
 
 /*
