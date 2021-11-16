@@ -1,1 +1,7 @@
+# block
+network/config/*
+
+# tx
+network/crypto-config/*
+
 albachain
