@@ -5,3 +5,4 @@ network/config/*
 network/crypto-config/*
 
 albachain
+/application/node_modules
