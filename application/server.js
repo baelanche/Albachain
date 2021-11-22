@@ -1,14 +1,15 @@
-// ExpressJS Setup
 const express = require('express');
 const app = express();
 
-// Hyperledger Bridge
-const { FileSystemWallet, Gateway } = require('fabric-network');
 const fs = require('fs');
 const path = require('path');
 const ccpPath = path.resolve(__dirname, '..', 'network' ,'connection.json');
 const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
 const ccp = JSON.parse(ccpJSON);
+
+// Hyperledger Bridge
+// const { FileSystemWallet, Gateway } = require('fabric-network');
+
 
 // Constants
 const PORT = 4000;
@@ -21,10 +22,18 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// main page routing
-app.get('/', (req, res)=>{
-    res.sendFile(__dirname + '/index.html');
-})
+/*
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/testDB');
+const db = mongoose.connection;
+
+db.once('open', function() {console.log('Connected');});
+db.on('error', function() {console.log('Connection failed');});
+*/
+const indexRouter = require('./routes/index');
+const workerRouter = require('./routes/worker');
+app.use('/', indexRouter);
+app.use('/worker', workerRouter);
 
 async function cc_call(fn_name, args){
     
@@ -61,7 +70,7 @@ async function cc_call(fn_name, args){
 }
 
 // create mate
-app.post('/worker', async(req, res)=>{
+/*app.post('/worker', async(req, res)=>{
     const email = req.body.email;
     console.log("add worker email: " + email);
 
@@ -69,7 +78,7 @@ app.post('/worker', async(req, res)=>{
 
     const myobj = {result: "success"}
     res.status(200).json(myobj) 
-})
+})*/
 
 // add score
 app.post('/workplace', async(req, res)=>{
@@ -84,6 +93,7 @@ app.post('/workplace', async(req, res)=>{
 })
 
 // find mate
+/*
 app.post('/worker/:id', async (req,res)=>{
     const id = req.body.id;
     const walletPath = path.join(process.cwd(), 'wallet');
@@ -104,8 +114,10 @@ app.post('/worker/:id', async (req,res)=>{
     res.status(200).json(myobj)
     // res.status(200).json(result)
 
-});
+});*/
 
 // server start
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
+
+module.exports = app;

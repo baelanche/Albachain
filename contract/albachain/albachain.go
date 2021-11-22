@@ -12,12 +12,12 @@ import (
 type Worker struct {
 	workerId string `json:"workerId"`
 	workerName string `json:"workerName"`
-	workplaceNumber []string `json:"workplaceNumberList"`
+	workplaceNumber []string `json:"workplaceNumber"`
 }
 
 type Employer struct {
 	employerId string `json:"employerId"`
-	workplaceNumber []string `json:"workplaceNumberList"`
+	workplaceNumber []string `json:"workplaceNumber"`
 }
 
 type Workplace struct {
@@ -77,6 +77,7 @@ func (t *Albachain) addWorker(stub shim.ChaincodeStubInterface, args []string) (
 	if id != nil {return "", fmt.Errorf("This id already exists")}
 
 	var wNumber []string
+	wNumber = append(wNumber, "P001")
 	var value = Worker{workerId: args[0], workerName: args[1], workplaceNumber: wNumber}
 	valueAsBytes, _ := json.Marshal(value)
 	stub.PutState(args[0], valueAsBytes)
