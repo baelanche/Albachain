@@ -8,4 +8,7 @@ network/crypto-config/*
 application/wallet/*
 
 # npm
-/application/node_modules
+application/node_modules
+
+# etc
+contract/albachain/albachain
