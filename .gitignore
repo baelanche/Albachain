@@ -4,5 +4,8 @@ network/config/*
 # tx
 network/crypto-config/*
 
-albachain
+# wallet
+application/wallet/*
+
+# npm
 /application/node_modules

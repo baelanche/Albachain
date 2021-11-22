@@ -11,7 +11,7 @@ const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
 const ccp = JSON.parse(ccpJSON);
 
 // Constants
-const PORT = 8080;
+const PORT = 4000;
 const HOST = '0.0.0.0';
 
 // use static file
@@ -40,21 +40,20 @@ async function cc_call(fn_name, args){
     const gateway = new Gateway();
     await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
     const network = await gateway.getNetwork('mychannel');
-    const contract = network.getContract('teamate');
+    const contract = network.getContract('albachain');
 
     var result;
     
-    if(fn_name == 'addUser')
-        result = await contract.submitTransaction('addUser', args);
-    else if( fn_name == 'addRating')
+    if(fn_name == 'addWorker')
+        result = await contract.submitTransaction('addWorker', args);
+    else if( fn_name == 'addWorkplace')
     {
-        e=args[0];
+        i=args[0];
         p=args[1];
-        s=args[2];
-        result = await contract.submitTransaction('addRating', e, p, s);
+        result = await contract.submitTransaction('addWorkplace', i, p);
     }
-    else if(fn_name == 'readRating')
-        result = await contract.evaluateTransaction('readRating', args);
+    else if(fn_name == 'getWorker')
+        result = await contract.evaluateTransaction('getWorker', args);
     else
         result = 'not supported function'
 
@@ -62,41 +61,34 @@ async function cc_call(fn_name, args){
 }
 
 // create mate
-app.post('/mate', async(req, res)=>{
+app.post('/worker', async(req, res)=>{
     const email = req.body.email;
-    console.log("add mate email: " + email);
+    console.log("add worker email: " + email);
 
-    result = cc_call('addUser', email)
+    result = cc_call('addWorker', email)
 
     const myobj = {result: "success"}
     res.status(200).json(myobj) 
 })
 
 // add score
-app.post('/score', async(req, res)=>{
-    const email = req.body.email;
-    const prj = req.body.project;
-    const sc = req.body.score;
-    console.log("add project email: " + email);
-    console.log("add project name: " + prj);
-    console.log("add project score: " + sc);
+app.post('/workplace', async(req, res)=>{
+    const id = req.body.id;
+    const place = req.body.place;
 
-    var args=[email, prj, sc];
-    result = cc_call('addRating', args)
+    var args=[id, place];
+    result = cc_call('addWorkplace', args)
 
     const myobj = {result: "success"}
     res.status(200).json(myobj) 
 })
 
 // find mate
-app.post('/mate/:email', async (req,res)=>{
-    const email = req.body.email;
-    console.log("email: " + req.body.email);
+app.post('/worker/:id', async (req,res)=>{
+    const id = req.body.id;
     const walletPath = path.join(process.cwd(), 'wallet');
     const wallet = new FileSystemWallet(walletPath);
-    console.log(`Wallet path: ${walletPath}`);
 
-    // Check to see if we've already enrolled the user.
     const userExists = await wallet.exists('user1');
     if (!userExists) {
         console.log('An identity for the user "user1" does not exist in the wallet');
@@ -106,8 +98,8 @@ app.post('/mate/:email', async (req,res)=>{
     const gateway = new Gateway();
     await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
     const network = await gateway.getNetwork('mychannel');
-    const contract = network.getContract('teamate');
-    const result = await contract.evaluateTransaction('readRating', email);
+    const contract = network.getContract('albachain');
+    const result = await contract.evaluateTransaction('getWorker', id);
     const myobj = JSON.parse(result)
     res.status(200).json(myobj)
     // res.status(200).json(result)
