@@ -1,0 +1,30 @@
+<head>
+    <% include('head') %>
+</head>
+  
+<body>
+    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" id="logo" href="/">ALBACHAIN</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+        <% if(isAuthenticated) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/join"><%= user.name %></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">로그아웃</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/join">회원가입</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/login">로그인</a>
+          </li>
+        <% } %>
+        </ul>
+      </nav>
+</body>

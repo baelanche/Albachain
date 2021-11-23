@@ -10,36 +10,38 @@ import (
 )
 
 type Worker struct {
-	workerId string `json:"workerId"`
-	workerName string `json:"workerName"`
-	workplaceNumber []string `json:"workplaceNumber"`
+	WorkerId string `json:"WorkerId"`
+	WorkerName string `json:"WorkerName"`
+	WorkplaceNumber []string `json:"WorkplaceNumberList"`
 }
 
 type Employer struct {
-	employerId string `json:"employerId"`
-	workplaceNumber []string `json:"workplaceNumber"`
+	EmployerId string `json:"EmployerId"`
+	WorkplaceNumber []string `json:"WorkplaceNumber"`
 }
 
 type Workplace struct {
-	workplaceNumber string `json:"workplaceNumber"`
-	employerId string `json:"employerId"`
-	worker []string `json:"workerList"`
-	wage int `json:"wage"`
+	WorkplaceNumber string `json:"WorkplaceNumber"`
+	EmployerId string `json:"EmployerId"`
+	Workers []string `json:"WorkerList"`
+	Wage int `json:"Wage"`
 }
 
 type WorkHistory struct {
-	workHistoryNumber string `json:"workHistoryNumber"`
-	workerId string `json:"workerId"`
-	workplaceNumber string `json:"workplaceNumber"`
-	workStartTime string `json:"workStartTime"`
-	workFinishTime string `json:"workFinishTime"`
-	wage int `json:"wage"`
-	historyCreateTime string `json:"historyCreateTime"`
-	historyApprovalTime string `json:"historyApprovalTime"`
-	approved bool `json:"approved"`
+	WorkHistoryNumber string `json:"WorkHistoryNumber"`
+	WorkerId string `json:"WorkerId"`
+	WorkplaceNumber string `json:"WorkplaceNumber"`
+	WorkStartTime string `json:"WorkStartTime"`
+	WorkFinishTime string `json:"WorkFinishTime"`
+	Wage int `json:"Wage"`
+	HistoryCreateTime string `json:"HistoryCreateTime"`
+	HistoryApprovalTime string `json:"HistoryApprovalTime"`
+	Approved bool `json:"Approved"`
 }
 
-type Albachain struct {}
+type Albachain struct {
+
+}
 
 func (t *Albachain) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	return shim.Success(nil)
@@ -51,7 +53,7 @@ func (t *Albachain) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	var result string
 	var err error
 	if fn == "addWorker" {
-		result, err = t.addWorker(stub, args)
+		t.addWorker(stub, args)
 	} else if fn == "getWorker" {
 		result, err = t.getWorker(stub, args)
 	} else if fn == "addEmployer" {
@@ -78,7 +80,7 @@ func (t *Albachain) addWorker(stub shim.ChaincodeStubInterface, args []string) (
 
 	var wNumber []string
 	wNumber = append(wNumber, "P001")
-	var value = Worker{workerId: args[0], workerName: args[1], workplaceNumber: wNumber}
+	var value = Worker{WorkerId: args[0], WorkerName: args[1], WorkplaceNumber: wNumber}
 	valueAsBytes, _ := json.Marshal(value)
 	stub.PutState(args[0], valueAsBytes)
 
@@ -103,7 +105,7 @@ func (t *Albachain) addEmployer(stub shim.ChaincodeStubInterface, args []string)
 	if id != nil {return "", fmt.Errorf("This id already exists")}
 
 	var workplaceNumber []string
-	var value = Employer{employerId: args[0], workplaceNumber: workplaceNumber}
+	var value = Employer{EmployerId: args[0], WorkplaceNumber: workplaceNumber}
 	valueAsBytes, _ := json.Marshal(value)
 	err2 := stub.PutState(args[0], valueAsBytes)
 
@@ -131,7 +133,7 @@ func (t *Albachain) addWorkplace(stub shim.ChaincodeStubInterface, args []string
 	err = json.Unmarshal(workerAsBytes, &worker)
 	if err != nil {return "", fmt.Errorf(err.Error())}
 
-	worker.workplaceNumber = append(worker.workplaceNumber, args[1])
+	worker.WorkplaceNumber = append(worker.WorkplaceNumber, args[1])
 	workerAsBytes, _ = json.Marshal(worker)
 	stub.PutState(args[0], workerAsBytes)
 

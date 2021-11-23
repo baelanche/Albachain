@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <%- include('partials/head') %>
+</head>
+<body class="loginbg">
+    <div class="container">
+        <div class="jumbotron loginbg">
+          </div>
+        <div class="card mx-auto" style="width:400px">
+            <div class="card-body">
+                <form method="post" action="/join" class="was-validated">
+                    <div class="form-group">
+                      <label for="uname"></label>
+                      <input type="text" class="form-control" id="id" placeholder="id" name="id" required>
+                      <div class="valid-feedback">Valid.</div>
+                      <div class="invalid-feedback">아이디를 입력해주세요</div>
+                    </div>
+                    <div class="form-group">
+                      <label for="name"></label>
+                      <input type="text" class="form-control" id="uname" placeholder="name" name="uname" required>
+                      <div class="valid-feedback">Valid.</div>
+                      <div class="invalid-feedback">이름을 입력해주세요</div>
+                    </div>
+                    <div class="form-group">
+                      <label for="pwd"></label>
+                      <input type="password" class="form-control" id="pwd" placeholder="password" name="password" required>
+                      <div class="valid-feedback">Valid.</div>
+                      <div class="invalid-feedback">비밀번호를 입력해주세요</div>
+                    </div>
+                    <div class="btn-group float-right">
+                        <button type="submit" class="btn btn-primary">가입하기</button>
+                    </div>
+                    <div class="btn-group float-right">
+                        <button type="button" class="btn" onclick="location.href='/'">취소</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+    </div>
+    <%- include('partials/footer') %>
+</body>

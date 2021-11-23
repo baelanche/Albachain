@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const fs = require('fs');
 const path = require('path');
@@ -10,29 +12,64 @@ const ccp = JSON.parse(ccpJSON);
 // Hyperledger Bridge
 // const { FileSystemWallet, Gateway } = require('fabric-network');
 
+const passport = require('passport')
+const session = require('express-session')
+const flash = require('connect-flash');
 
-// Constants
 const PORT = 4000;
 const HOST = '0.0.0.0';
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
+
 // use static file
-app.use(express.static(path.join(__dirname, 'views')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// configure app to use body-parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-/*
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/testDB');
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+  }))
+  app.use(passport.initialize())
+  app.use(passport.session())
+  app.use(flash())
+
+// mongodb+srv://admin:<password>@mydb.lpk8j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+mongoose.connect('mongodb://localhost:27017/test', {
+     useNewUrlParser: true, 
+     useUnifiedTopology: true, 
+     /* default */
+     useCreateIndex: true, 
+    // useFindAndModify: false 
+});
 const db = mongoose.connection;
+db.on('error', function(){
+    console.log('MongoDB connection failed!')
+})
+db.once('open', function(){
+    console.log('MongoDB connection success!')
+})
 
-db.once('open', function() {console.log('Connected');});
-db.on('error', function() {console.log('Connection failed');});
-*/
+// 로그인되어 있는지 확인하는 미들웨어 
+app.use(function(req,res,next){
+    // res.locals로 등록된 변수는 ejs 어디에서나 사용가능
+    res.locals.isAuthenticated = req.isAuthenticated();
+    res.locals.user = req.user;
+    next();
+});
+
 const indexRouter = require('./routes/index');
+const joinRouter = require('./routes/join');
+const loginRouter = require('./routes/login');
 const workerRouter = require('./routes/worker');
 app.use('/', indexRouter);
+app.use('/join', joinRouter);
+app.use('/login', loginRouter);
 app.use('/worker', workerRouter);
 
 async function cc_call(fn_name, args){

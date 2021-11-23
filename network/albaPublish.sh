@@ -14,7 +14,7 @@ sleep 5
 docker exec cli peer chaincode query -n albachain -C mychannel -c '{"Args":["getWorker","user1"]}'
 
 #chaincode invoke add rating
-#docker exec cli peer chaincode invoke -n albachain -C mychannel -c '{"Args":["addWorkplace","user1","p001"]}'
+docker exec cli peer chaincode invoke -n albachain -C mychannel -c '{"Args":["addWorkplace","user1","p001"]}'
 sleep 5
 
 echo '-------------------------------------END-------------------------------------'

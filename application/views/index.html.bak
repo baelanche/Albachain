@@ -107,11 +107,11 @@
                 const parsedData = JSON.parse(test)
                 $('#table').empty();
                 
-                $('#table').append("<tr><th scope='row'>workerId</th><td>" + parsedData.workerId + "</td></tr>")
+                $('#table').append("<tr><th scope='row'>workerId</th><td>" + parsedData.WorkerId + "</td></tr>")
                 // Line 69~ 86 : rates라는 key의 value로 Json array가 있으므로 반복문을 통해 한 줄씩 테이블에 넣어줌
-                $('#table').append("<tr><th scope='row'>workerName</th><td>" + parsedData.workerName + "</td></tr>")
-                for (var i = 0; i<parsedData.workplaceNumber.length; i++)
-                    $('#table').append("<tr><th scope='row'>workplaceNumber</th><td>" + parsedData.workplaceNumber[i] + "</td></tr>")
+                $('#table').append("<tr><th scope='row'>workerName</th><td>" + parsedData.WorkerName + "</td></tr>")
+                for (var i = 0; i<parsedData.WorkplaceNumberList.length; i++)
+                    $('#table').append("<tr><th scope='row'>workplaceNumber</th><td>" + parsedData.WorkplaceNumberList[i] + "</td></tr>")
             }        
         })
     })

@@ -6,7 +6,7 @@ const Worker = require('../model/worker');
 
 
 router.get('/', function(req, res) {
-    res.render('index');
+    res.render('login');
 })
 
 module.exports = router;
