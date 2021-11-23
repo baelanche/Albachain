@@ -6,27 +6,33 @@
     <%- include('partials/navbar') %>
     <div class="container-fluid">
         <section>
+            <% if(!isAuthenticated) { %>
             <div class="jumbotron white">
                 <h2 class="text-center">로그인 후 서비스를 이용해주세요.</h2>
             </div>
             <div class="card-deck">
                 <div class="card">
-                <div class="card-body text-center">
-                    <button type="button" class="btn" onclick="location.href='/join'">
-                        <img src="/images/join.png" class="icon"/>
-                        <h2>회원가입</h2>
-                    </button>
-                </div>
+                    <div class="card-body text-center">
+                        <button type="button" class="btn" onclick="location.href='/join'">
+                            <img src="/images/join.png" class="icon"/>
+                            <h2>회원가입</h2>
+                        </button>
+                    </div>
                 </div>
                 <div class="card">
-                <div class="card-body text-center">
-                    <button type="button" class="btn" onclick="location.href='/login'">
-                        <img src="/images/login.png" class="icon"/>
-                        <h2>로그인</h2>
-                    </button>
-                </div>
+                    <div class="card-body text-center">
+                        <button type="button" class="btn" onclick="location.href='/login'">
+                            <img src="/images/login.png" class="icon"/>
+                            <h2>로그인</h2>
+                        </button>
+                    </div>
                 </div>
             </div>
+            <%} else {%>
+            <div>
+                gg
+            </div>
+            <%} %>
         </section>
         <%- include('partials/footer') %>
     </div>
