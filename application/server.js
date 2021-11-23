@@ -34,26 +34,21 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: true
-  }))
-  app.use(passport.initialize())
-  app.use(passport.session())
-  app.use(flash())
+}));
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
 
 // mongodb+srv://admin:<password>@mydb.lpk8j.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 mongoose.connect('mongodb://localhost:27017/test', {
      useNewUrlParser: true, 
-     useUnifiedTopology: true, 
-     /* default */
+     useUnifiedTopology: true,
      useCreateIndex: true, 
     // useFindAndModify: false 
 });
 const db = mongoose.connection;
-db.on('error', function(){
-    console.log('MongoDB connection failed!')
-})
-db.once('open', function(){
-    console.log('MongoDB connection success!')
-})
+db.on('error', function(){console.log('MongoDB connection failed!')})
+db.once('open', function(){console.log('MongoDB connection success!')})
 
 // 로그인되어 있는지 확인하는 미들웨어 
 app.use(function(req,res,next){
@@ -66,10 +61,12 @@ app.use(function(req,res,next){
 const indexRouter = require('./routes/index');
 const joinRouter = require('./routes/join');
 const loginRouter = require('./routes/login');
+const logoutRouter = require('./routes/logout');
 const workerRouter = require('./routes/worker');
 app.use('/', indexRouter);
 app.use('/join', joinRouter);
 app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
 app.use('/worker', workerRouter);
 
 async function cc_call(fn_name, args){
