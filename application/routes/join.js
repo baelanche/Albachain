@@ -16,8 +16,7 @@ passport.use('local-join', new LocalStrategy({ // local-signup이라는 strategy
     usernameField: 'id', // email을 username으로 사용하겠다고 선언
     passwordField: 'password',
     passReqToCallback: true  // request객체에 user의 데이터를 포함시킬지에 대한 여부를 결정, 유저 정보를 req.user로 접근할 수 있게 됨
-    }, function (req, id, uname, password, done) {
-        console.log('join1...')
+    }, function (req, id, password, done) {
         Worker.findOne({id: id}, async function (err, user) { // 데이터베이스에서 넘겨받은 email으로 해당 유저가 있는지 검색
         if (err) return done(null);
         if (user) { // DB 상에 해당 유저가 있으면 에러 메시지 출력
@@ -28,7 +27,7 @@ passport.use('local-join', new LocalStrategy({ // local-signup이라는 strategy
         // 저장할 유저 객체 생성 
         const newWorker = new Worker();
         newWorker.id = id;
-        newWorker.name = uname;
+        newWorker.name = req.body.uname;
         // generateHash을 통해 비밀번호를 hash화
         // generateHash 함수는 model/User에 정의되어 있음
         newWorker.password = newWorker.generateHash(password); 
