@@ -27,6 +27,7 @@ passport.use('local-join', new LocalStrategy({ // local-signup이라는 strategy
         const newUser = new User();
         newUser.id = id;
         newUser.name = req.body.uname;
+        newUser.role = req.body.role;
         // generateHash을 통해 비밀번호를 hash화
         // generateHash 함수는 model/User에 정의되어 있음
         newUser.password = newUser.generateHash(password); 

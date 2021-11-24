@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt-nodejs'); // 비밀번호 암호화를 위한 모
 const userSchema = new mongoose.Schema({
   id: {type: String, unique: true, required: true},
   name: {type: String},
+  role: {type: String},
   password: {type: String, required: true},
   workplace: [
       {
