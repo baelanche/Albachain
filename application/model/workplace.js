@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt-nodejs'); // 비밀번호 암호화를 위한 모
 
 const workplaceSchema = new mongoose.Schema({
   workplaceNumber: {type: String, unique: true, required: true},
-  workers: [
+  users: [
       {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "worker"
+          ref: "user"
       }
   ],
   wage : {type: Number, required: true}

@@ -2,11 +2,11 @@ const express = require('express');
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 const router = express.Router();
-const Worker = require('../model/worker');
+const User = require('../model/user');
 
-passport.use(new LocalStrategy(Worker.authenticate()));
-passport.serializeUser(Worker.serializeUser());
-passport.deserializeUser(Worker.deserializeUser());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 router.get('/', function(req, res) {
     res.render('join');
@@ -17,25 +17,24 @@ passport.use('local-join', new LocalStrategy({ // local-signup이라는 strategy
     passwordField: 'password',
     passReqToCallback: true  // request객체에 user의 데이터를 포함시킬지에 대한 여부를 결정, 유저 정보를 req.user로 접근할 수 있게 됨
     }, function (req, id, password, done) {
-        Worker.findOne({id: id}, async function (err, user) { // 데이터베이스에서 넘겨받은 email으로 해당 유저가 있는지 검색
+        User.findOne({id: id}, async function (err, user) { // 데이터베이스에서 넘겨받은 email으로 해당 유저가 있는지 검색
         if (err) return done(null);
         if (user) { // DB 상에 해당 유저가 있으면 에러 메시지 출력
           console.log("중복된 아이디입니다.")
           return done(null, false, req.flash('signupMessage', '중복된 아이디입니다.'));
         }
-  
         // 저장할 유저 객체 생성 
-        const newWorker = new Worker();
-        newWorker.id = id;
-        newWorker.name = req.body.uname;
+        const newUser = new User();
+        newUser.id = id;
+        newUser.name = req.body.uname;
         // generateHash을 통해 비밀번호를 hash화
         // generateHash 함수는 model/User에 정의되어 있음
-        newWorker.password = newWorker.generateHash(password); 
+        newUser.password = newUser.generateHash(password); 
   
-        newWorker.save(function (err) { // 새 유저를 DB에 저장
+        newUser.save(function (err) { // 새 유저를 DB에 저장
           if (err) throw err;
           console.log("회원가입 성공")
-          return done(null, newWorker); // serializeUser에 user를 넘겨줌 
+          return done(null, newUser); // serializeUser에 user를 넘겨줌 
         });
         
         // 유저를 블록체인에 저장

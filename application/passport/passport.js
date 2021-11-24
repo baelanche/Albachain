@@ -1,6 +1,6 @@
 import passport from "passport"
-import Worker from "./model/worker"
+import User from "./model/user"
 
-passport.use(Worker.createStrategy());
-passport.serializeUser(Worker.serializeUser());
-passport.deserializeUser(Worker.deserializeUser());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());

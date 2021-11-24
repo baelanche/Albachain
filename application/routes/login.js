@@ -2,11 +2,11 @@ const express = require('express');
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 const router = express.Router();
-const Worker = require('../model/worker');
+const User = require('../model/user');
 
-passport.use(new LocalStrategy(Worker.authenticate()));
-passport.serializeUser(Worker.serializeUser());
-passport.deserializeUser(Worker.deserializeUser());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 router.get('/', function(req, res) {
     res.render('login');
@@ -21,20 +21,20 @@ passport.use('local-login', new LocalStrategy({
     // 로그인이 성공하면 done함수가 실행되고, done의 리턴값이 serializeUser함수의 인자로 들어가 세션을 저장한다 
   }, function(req, id, password, done){ 
     // 데이터베이스의 User 테이블에서 로그인하려는 email을 검색
-    Worker.findOne({'id': id}, function(err, worker){
+    User.findOne({'id': id}, function(err, user){
       if (err) return done(err);
       // DB상에 해당 email을 가진 유저가 없다면 에러 로그 출력
-      if (!worker) {
+      if (!user) {
         console.log("존재하지 않는 아이디입니다.")
         return done(null, false, req.flash('signinMessage', '존재하지 않는 아이디입니다.'));
       }
       // 비밀번호가 맞지 않다면 (validPassword 함수는 model/User.js에 정의되어 있음) 에러 로그 출력
-      if (!worker.validPassword(password)) {
+      if (!user.validPassword(password)) {
           console.log("비밀번호가 틀렸습니다.")
           return done(null, false, req.flash('signinMessage', '비밀번호가 틀렸습니다.'));
         }
       // done 함수는 자동으로 serializeUser를 호출해준다
-      return done(null, worker); 
+      return done(null, user); 
     });
   })); 
 

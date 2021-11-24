@@ -2,7 +2,7 @@ const express = require('express');
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 const router = express.Router();
-const Worker = require('../model/worker');
+const User = require('../model/user');
 
 
 router.get('/', function(req, res) {
