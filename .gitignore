@@ -12,3 +12,4 @@ application/node_modules
 
 # etc
 contract/albachain/albachain
+network/tmp

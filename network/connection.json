@@ -1,5 +1,5 @@
 {
-    "name": "basic-network",
+    "name": "three-network",
     "version": "1.0.0",
     "client": {
         "organization": "Org1",
@@ -15,10 +15,12 @@
     "channels": {
         "mychannel": {
             "orderers": [
-                "orderer.example.com"
+                "orderer.hydrogreen.com"
             ],
             "peers": {
-                "peer0.org1.example.com": {}
+                "peer0.org1.hydrogreen.com": {},
+                "peer0.org2.hydrogreen.com": {},
+                "peer0.org3.hydrogreen.com": {}
             }
         }
     },
@@ -26,27 +28,59 @@
         "Org1": {
             "mspid": "Org1MSP",
             "peers": [
-                "peer0.org1.example.com"
+                "peer0.org1.hydrogreen.com"
             ],
             "certificateAuthorities": [
-                "ca.example.com"
+                "ca.org1.hydrogreen.com"
+            ]
+        },
+        "Org2": {
+            "mspid": "Org2MSP",
+            "peers": [
+                "peer0.org2.hydrogreen.com"
+            ],
+            "certificateAuthorities": [
+                "ca.org2.hydrogreen.com"
+            ]
+        },
+        "Org3": {
+            "mspid": "Org3MSP",
+            "peers": [
+                "peer0.org3.hydrogreen.com"
+            ],
+            "certificateAuthorities": [
+                "ca.org3.hydrogreen.com"
             ]
         }
     },
     "orderers": {
-        "orderer.example.com": {
+        "orderer.hydrogreen.com": {
             "url": "grpc://localhost:7050"
         }
     },
     "peers": {
-        "peer0.org1.example.com": {
+        "peer0.org1.hydrogreen.com": {
             "url": "grpc://localhost:7051"
+        },
+        "peer0.org2.hydrogreen.com": {
+            "url": "grpc://localhost:8051"
+        },
+        "peer0.org3.hydrogreen.com": {
+            "url": "grpc://localhost:9051"
         }
     },
     "certificateAuthorities": {
-        "ca.example.com": {
+        "ca.org1.hydrogreen.com": {
             "url": "http://localhost:7054",
-            "caName": "ca.example.com"
+            "caName": "ca.org1.hydrogreen.com"
+        },
+        "ca.org2.hydrogreen.com": {
+            "url": "http://localhost:8054",
+            "caName": "ca.org2.hydrogreen.com"
+        },
+        "ca.org3.hydrogreen.com": {
+            "url": "http://localhost:9054",
+            "caName": "ca.org3.hydrogreen.com"
         }
     }
 }
