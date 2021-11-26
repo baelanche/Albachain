@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<head>
+    <%- include('partials/head') %>
+</head>
+<body class="loginbg">
+    <div class="container">
+        <div class="jumbotron loginbg">
+          </div>
+        <div class="card mx-auto" style="width:800px">
+            <div class="card-body">
+                <form id="frm" method="post" action="/workplace" class="was-validated">
+                    <h5>지점을 선택해주세요.</h5>
+                    <select id="place" name="place" class="custom-select" style="margin-bottom:35px" required>
+                        <option value="025759284">강남구 개포대성점</option>
+                        <option value="0234120097">강남구 대청수성점</option>
+                        <option value="0260533123">강남구 BGF사옥점</option>
+                        <option value="025644486">강남구 삼성가멸점</option>
+                        <option value="07088715634">강남구 강남일원점</option>
+                    </select>
+                    <h5>직급을 선택해주세요.</h5>
+                    <select id="role" name="role" class="custom-select" style="margin-bottom:35px" required>
+                        <option value="025759284">알바생</option>
+                    </select>
+                    <div class="btn-group float-right">
+                        <button type="submit" class="btn btn-primary">요청하기</button>
+                    </div>
+                    <div class="btn-group float-right">
+                        <button type="button" class="btn" onclick="location.href='/'">취소</button>
+                    </div>
+                </form>
+            </div>
+          </div>
+    </div>
+</body>

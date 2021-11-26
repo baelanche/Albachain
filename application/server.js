@@ -62,11 +62,13 @@ const indexRouter = require('./routes/index');
 const joinRouter = require('./routes/join');
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
+const workplaceRouter = require('./routes/workplace');
 const workerRouter = require('./routes/worker');
 app.use('/', indexRouter);
 app.use('/join', joinRouter);
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
+app.use('/workplace', workplaceRouter);
 app.use('/worker', workerRouter);
 
 async function cc_call(fn_name, args){

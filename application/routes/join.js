@@ -4,6 +4,14 @@ const passport = require('passport');
 const router = express.Router();
 const User = require('../model/user');
 
+const { FileSystemWallet, Gateway } = require('fabric-network');
+
+const fs = require('fs');
+const path = require('path');
+const ccpPath = path.resolve(__dirname, '../..', 'network' ,'connection.json');
+const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+const ccp = JSON.parse(ccpJSON);
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -39,25 +47,24 @@ passport.use('local-join', new LocalStrategy({ // local-signup이라는 strategy
         });
         
         // 유저를 블록체인에 저장
-        /*
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = new FileSystemWallet(walletPath);
         console.log(`Wallet path: ${walletPath}`);
   
-        const userExists = await wallet.exists('user2');
+        const userExists = await wallet.exists('user1');
         if (!userExists) {
-            console.log('An identity for the user "user2" does not exist in the wallet');
+            console.log('An identity for the user "user1" does not exist in the wallet');
             console.log('Run the registerUser.js application before retrying');
             return;
         }
         const gateway = new Gateway();
-        await gateway.connect(ccp, { wallet, identity: 'user2', discovery: { enabled: false } });
-        const network = await gateway.getNetwork('mychannel');
-        const contract = network.getContract('teamate');
-        await contract.submitTransaction('addUser', email);
+        await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
+        const network = await gateway.getNetwork('mygreen');
+        const contract = network.getContract('albachain');
+        await contract.submitTransaction('addWorker', id, req.body.uname);
         console.log('Transaction has been submitted');
         await gateway.disconnect();
-        */
+        
       })
   }));
   

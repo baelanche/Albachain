@@ -28,11 +28,26 @@
                     </div>
                 </div>
             </div>
-            <%} else {%>
+            <%} else if(isAuthenticated && user.role == 'worker') {%>
             <div>
-                <%= user.role %>
-                <%= user.workplace.length %>
+                <% if(user.workplace.length == 0) {%>
+                    <div class="jumbotron white">
+                        <h2 class="text-center">근무지를 추가해주세요.</h2>
+                    </div>
+                    <div class="card-deck">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <button type="button" class="btn" onclick="location.href='/workplace'">
+                                    <img src="/images/join.png" class="icon"/>
+                                    <h2>근무지 추가</h2>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
             </div>
+            <%} else if(isAuthenticated && user.role == 'employer') {%>
+                hi
             <%} %>
         </section>
         <%- include('partials/footer') %>
