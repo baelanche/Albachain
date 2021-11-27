@@ -25,6 +25,9 @@ Blockchain work record management with Hyperledger fabric
 ## Clean up after run
 
 1. run ./teardown.sh
+    * clean up docker container, docker images
+    * down docker network
+    * remove all wallet (line : 35)
 2. clean the mongoDB
     * `$ sudo mongo`
     * `> use test`
