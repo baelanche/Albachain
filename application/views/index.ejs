@@ -30,24 +30,103 @@
             </div>
             <%} else if(isAuthenticated && user.role == 'worker') {%>
             <div>
-                <% if(user.workplace.length == 0) {%>
-                    <div class="jumbotron white">
-                        <h2 class="text-center">근무지를 추가해주세요.</h2>
+                <input type="hidden" id="uid" value="<%=user.id%>">
+                    <div class="jumbotron white" id="addsub">
                     </div>
-                    <div class="card-deck">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <button type="button" class="btn" onclick="location.href='/workplace'">
-                                    <img src="/images/join.png" class="icon"/>
-                                    <h2>근무지 추가</h2>
-                                </button>
-                            </div>
-                        </div>
+                    <div class="card-deck" id="addcard"> 
                     </div>
-                <% } %>
+                    <table class="table table-bordered" id="addtable">
+                    </table>
             </div>
+            <script>
+                $("document").ready(function() {
+                    var id = document.getElementById('uid').value;
+                    const url = "/";
+                    console.log(`id : ${id}`);
+                    $.post(url, {WorkerId: id}, (data) => {
+                        console.log(data);
+                        const test = JSON.stringify(data);
+                        const parsedData = JSON.parse(test);
+                        console.log(parsedData);
+                        if(data.type == 'Buffer') {
+                            $('#addsub').append('<h2 class="text-center">근무지를 추가해주세요.</h2>');
+                            $('#addcard').append('<div class="card" id="cardinner">');
+                            $('#cardinner').append('<div class="card-body text-center" id="cardinner2">');
+                            $('#cardinner2').append(`<button type="button" id="cardinner3" class="btn" onclick="location.href='/workplace'">`);
+                            $('#cardinner3').append('<img src="/images/join.png" class="icon"/>');
+                            $('#cardinner3').append('<h2>근무지 추가</h2>');
+                            $('#cardinner2').append('</button>');
+                            $('#cardinner').append('</div>');
+                            $('#addcard').append('</div>');
+                        } else {
+                            var now = new Date();
+                            $('#addsub').append('<h2 class="text-center">근무지 정보</h2>');
+                            $('#addtable').append('<tr>');
+                            $('#addtable').append('<th>사업장번호</th>');
+                            $('#addtable').append('<th>사업장이름</th>');
+                            $('#addtable').append('<th>근무시작일</th>');
+                            $('#addtable').append('<th>시급</th>');
+                            $('#addtable').append('<th>가입여부</th>');
+                            $('#addtable').append('</tr>');
+                            $('#addtable').append('<tr>');
+                            $('#addtable').append(`<td>${parsedData.WorkplaceNumber}</td>`);
+                            $('#addtable').append(`<td><a href="/history/${parsedData.WorkplaceNumber}">${parsedData.WorkplaceName}</a></td>`);
+                            $('#addtable').append(`<td>${parsedData.WorkJoinDate == "" ? now.getFullYear() + "" + (now.getMonth() + 1) + now.getDate() : parsedData.WorkJoinDate}</td>`);
+                            $('#addtable').append(`<td>${parsedData.Wage}</td>`);
+                            $('#addtable').append(`<td>${parsedData.Approved == false ? "요청 대기중" : "가입 완료"}</td>`);
+                            $('#addtable').append('</tr>');
+                        }
+                    })
+                })
+            </script>
             <%} else if(isAuthenticated && user.role == 'employer') {%>
-                hi
+                <div>
+                    <input type="hidden" id="uid" value="<%=user.id%>">
+                        <div class="jumbotron white" id="addsub">
+                        </div>
+                        <div class="card-deck" id="addcard"> 
+                        </div>
+                        <div class="row" id="addrow" style="margin-bottom: 10px;">
+                          </div>
+                        <table class="table table-bordered" id="addtable">
+                        </table>
+                </div>
+                <script>
+                    $("document").ready(function() {
+                        var id = document.getElementById('uid').value;
+                        const url = "/";
+                        console.log(`id : ${id}`);
+                        $.post(url, {WorkerId: id}, (data) => {
+                            const test = JSON.stringify(data);
+                            const parsedData = JSON.parse(test);
+                            console.log(parsedData);
+                            if(data.type == 'Buffer') {
+                                $('#addsub').append('<h2 class="text-center">근무지를 추가해주세요.</h2>');
+                                $('#addcard').append('<div class="card" id="cardinner">');
+                                $('#cardinner').append('<div class="card-body text-center" id="cardinner2">');
+                                $('#cardinner2').append(`<button type="button" id="cardinner3" class="btn" onclick="location.href='/workplace'">`);
+                                $('#cardinner3').append('<img src="/images/join.png" class="icon"/>');
+                                $('#cardinner3').append('<h2>근무지 추가</h2>');
+                                $('#cardinner2').append('</button>');
+                                $('#cardinner').append('</div>');
+                                $('#addcard').append('</div>');
+                            } else {
+                                var now = new Date();
+                                $('#addsub').append('<h2 class="text-center">근무지 정보</h2>');
+                                $('#addrow').append(`<div class="col" style="background-color:lavender;">ID : ${parsedData.EmployerId}</div>`);
+                                $('#addrow').append(`<div class="col" style="background-color:lavender;">이름 : ${parsedData.EmployerName}</div>`);
+                                $('#addrow').append(`<div class="col" style="background-color:lavender;">가입일 : ${parsedData.JoinDate}</div>`);
+                                for(var i=0; i<parsedData.WorkplaceList.length; i++) {
+                                    $('#addtable').append('<tr>');
+                                    $('#addtable').append(`<td>${parsedData.WorkplaceList[i].WorkplaceNumber}</td>`);
+                                    $('#addtable').append(`<td><a href="/workplace/${parsedData.WorkplaceList[i].WorkplaceNumber}">${parsedData.WorkplaceList[i].WorkplaceName}</a></td>`);
+                                    $('#addtable').append(`<td>시급 : ${parsedData.WorkplaceList[i].DefaultWage}</td>`);
+                                    $('#addtable').append('</tr>');
+                                }
+                            }
+                        })
+                    })
+                </script>
             <%} %>
         </section>
         <%- include('partials/footer') %>

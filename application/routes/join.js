@@ -4,7 +4,7 @@ const passport = require('passport');
 const router = express.Router();
 const User = require('../model/user');
 
-const { FileSystemWallet, Gateway } = require('fabric-network');
+const { FileSystemWallet, Gateway, X509WalletMixin } = require('fabric-network');
 
 const fs = require('fs');
 const path = require('path');
@@ -46,31 +46,55 @@ passport.use('local-join', new LocalStrategy({ // local-signup이라는 strategy
           return done(null, newUser); // serializeUser에 user를 넘겨줌 
         });
         
-        // 유저를 블록체인에 저장
-        const walletPath = path.join(process.cwd(), 'wallet');
-        const wallet = new FileSystemWallet(walletPath);
-        console.log(`Wallet path: ${walletPath}`);
+        try {
+
+          // Create a new file system based wallet for managing identities.
+          const walletPath = path.join(process.cwd(), 'wallet');
+          const wallet = new FileSystemWallet(walletPath);
+          console.log(`Wallet path: ${walletPath}`);
   
-        const userExists = await wallet.exists('user1');
-        if (!userExists) {
-            console.log('An identity for the user "user1" does not exist in the wallet');
-            console.log('Run the registerUser.js application before retrying');
-            return;
-        }
-        const gateway = new Gateway();
-        await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
-        const network = await gateway.getNetwork('mygreen');
-        const contract = network.getContract('albachain');
-        await contract.submitTransaction('addWorker', id, req.body.uname);
-        console.log('Transaction has been submitted');
-        await gateway.disconnect();
-        
+          // Check to see if we've already enrolled the user.
+          const userExists = await wallet.exists(id);
+          if (userExists) {
+              console.log('An identity for the user "user1" already exists in the wallet');
+              return;
+          }
+  
+          // Check to see if we've already enrolled the admin user.
+          const adminExists = await wallet.exists('admin');
+          if (!adminExists) {
+              console.log('An identity for the admin user "admin" does not exist in the wallet');
+              console.log('Run the enrollAdmin.js application before retrying');
+              return;
+          }
+  
+          // Create a new gateway for connecting to our peer node.
+          const gateway = new Gateway();
+          await gateway.connect(ccp, { wallet, identity: 'admin', discovery: { enabled: false } });
+  
+          // Get the CA client object from the gateway for interacting with the CA.
+          const ca = gateway.getClient().getCertificateAuthority();
+          const adminIdentity = gateway.getCurrentIdentity();
+  
+          // Register the user, enroll the user, and import the new identity into the wallet.
+          const secret = await ca.register({ affiliation: 'org1.department1', enrollmentID: id, role: 'client' }, adminIdentity);
+          const enrollment = await ca.enroll({ enrollmentID: id, enrollmentSecret: secret });
+          const userIdentity = X509WalletMixin.createIdentity('Org1MSP', enrollment.certificate, enrollment.key.toBytes());
+          wallet.import(id, userIdentity);
+          console.log('Successfully registered and enrolled admin user',id,'and imported it into the wallet');
+  
+      } catch (error) {
+          console.error(`Failed to register user "user1": ${error}`);
+          process.exit(1);
+      }
+
+
       })
   }));
-  
+
   // post 요청이 들어오면 위에서 정의한 local-join 전략을 실행해준다
   router.post("/", passport.authenticate("local-join",{
-      successRedirect:"/",  // 성공 혹은 실패 시 redirect되는 url
+      successRedirect:"/blank",  // 성공 혹은 실패 시 redirect되는 url
       failureRedirect:"/join",
       failureFlash: true // 실패 시 flash 메시지를 띄우는 설정
   })) 

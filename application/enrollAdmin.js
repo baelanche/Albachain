@@ -4,20 +4,24 @@
 
 'use strict';
 
+// SDK 에서 컴포넌트 사용
 const FabricCAServices = require('fabric-ca-client');
 const { FileSystemWallet, X509WalletMixin } = require('fabric-network');
 const fs = require('fs');
 const path = require('path');
 
-const ccpPath = path.resolve(__dirname, '..', 'network', 'connection.json');
+// 연결정보 connection.json 파일 불러오기
+const ccpPath = path.resolve(__dirname,'connection.json');
 const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+
+// JSON -> 구조체
 const ccp = JSON.parse(ccpJSON);
 
 async function main() {
     try {
 
         // Create a new CA client for interacting with the CA.
-        const caURL = ccp.certificateAuthorities['ca.example.com'].url;
+        const caURL = ccp.certificateAuthorities['ca.org1.hydrogreen.com'].url;
         const ca = new FabricCAServices(caURL);
 
         // Create a new file system based wallet for managing identities.

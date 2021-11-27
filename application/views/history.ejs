@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<head>
+    <%- include('partials/head') %>
+</head>
+<body class="loginbg">
+    <%- include('partials/navbar') %>
+    <div class="container">
+        <input type="hidden" id="wpid" name="wpid" value="<%=wpid%>">
+        <div class="jumbotron loginbg" id="addsub">
+          
+        </div>
+        <div id="adddiv">
+
+        </div>
+        <br/><br/>
+        <table class="table table-bordered text-center" id="addtable">
+
+        </table>
+        <div id="adddiv2">
+
+        </div>
+    </div>
+    <script>
+        $("document").ready(function() {
+            var wpid = document.getElementById('wpid').value;
+            const url = `/history/${wpid}`;
+            $('#addsub').append(`<h2>(${wpid}) 강남구 개포대성점</h2>`);
+            var hisnum = wpid + 'HS';
+            $.post(url, {HistoryNumber: hisnum}, (data) => {
+                const test = JSON.stringify(data);
+                const parsedData = JSON.parse(test);
+                console.log(parsedData[0]);
+                if(parsedData == null || parsedData == undefined || parsedData == 'Buffer') {
+                    $('#adddiv2').append(`<h3 class="text-center">근무이력이 없습니다.</h3>`);
+                    $('#adddiv').append(`<button type="button" class="btn btn-primary float-right" onclick="location.href='/history/${hisnum + '0001'}/add'">추가</button>`);
+                } else {
+                    $('#addtable').append(`<tr>`);
+                    $('#addtable').append(`<th>순번</th>`);
+                    $('#addtable').append(`<th>근무자 이름</th>`);
+                    $('#addtable').append(`<th>근무 시작 시간</th>`);
+                    $('#addtable').append(`<th>근무 종료 시간</th>`);
+                    $('#addtable').append(`<th>시급</th>`);
+                    $('#addtable').append(`<th>승인 여부</th>`);
+                    $('#addtable').append(`<th>등록 시간</th>`);
+                    $('#addtable').append(`<th>승인 시간</th>`);
+                    $('#addtable').append(`</tr>`);
+                    for (var i=0; i<parsedData.length; i++) {
+                        $('#addtable').append(`<tr>`);
+                        $('#addtable').append(`<td>${i+1}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.WorkerName}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.WorkStartTime}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.WorkFinishTime}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.Wage}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.Approved == false ? "대기중" : "승인"}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.HistoryCreateTime}</td>`);
+                        $('#addtable').append(`<td>${parsedData[i].Record.HistoryApprovalTime == "" ? "대기중" : "승인"}</td>`);
+                        $('#addtable').append(`</tr>`);
+                    }
+                    var postfix = String(parsedData.length + 1);
+                    if (postfix.length == 1) postfix = '000' + postfix;
+                    else if (postfix.length == 2) postfix = '00' + postfix;
+                    else if (postfix.length == 3) postfix = '0' + postfix;
+                    $('#adddiv').append(`<button type="button" class="btn btn-primary float-right" onclick="location.href='/history/${hisnum + postfix}/add'">추가</button>`);
+                }
+            })
+        })
+    </script>
+</body>

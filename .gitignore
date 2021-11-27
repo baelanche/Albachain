@@ -11,5 +11,5 @@ application/wallet/*
 application/node_modules
 
 # etc
-contract/albachain/albachain
+chaincode/albachain/albachain
 network/tmp

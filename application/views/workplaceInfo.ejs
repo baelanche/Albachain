@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+    <%- include('partials/head') %>
+</head>
+<body class="loginbg">
+    <%- include('partials/navbar') %>
+    <div class="container">
+        <input type="hidden" id="wpid" name="wpid" value="<%=wpid%>">
+        <div class="jumbotron loginbg" id="addsub">
+          
+        </div>
+        <div id="adddiv">
+
+        </div>
+        <table class="table table-bordered text-center" id="addtable">
+
+        </table>
+    </div>
+    <script>
+        $("document").ready(function() {
+            var id = document.getElementById('wpid').value;
+            const url = `/workplace/${id}`;
+            $.post(url, {WorkplaceNumber: id}, (data) => {
+                const test = JSON.stringify(data);
+                const parsedData = JSON.parse(test);
+                var now = new Date();
+                console.log(parsedData);
+                $('#addsub').append(`<h2>(${parsedData.WorkplaceNumber})${parsedData.WorkplaceName} / 점장 : ${parsedData.EmployerName}</h2>`);
+                if(parsedData.WorkerList == null) {
+                    $('#adddiv').append(`<h4>근무자가 없습니다.</h4>`);
+                } else {
+                    $('#adddiv').append(`<h4>총 근무자 ${parsedData.WorkerList.length}명</h4><br/>`);
+                    $('#addtable').append(`<tr>`);
+                        $('#addtable').append(`<th>순번</th>`);
+                        $('#addtable').append(`<th>이름</th>`);
+                        $('#addtable').append(`<th>근무시작일</th>`);
+                        $('#addtable').append(`<th>근속일수</th>`);
+                        $('#addtable').append(`<th>퇴사 여부</th>`);
+                        $('#addtable').append(`<th>근무이력보기</th>`);
+                    $('#addtable').append(`<tr>`);
+                    for(var i=0; i<parsedData.WorkerList.length; i++) {
+                        $('#addtable').append(`<tr>`);
+                        $('#addtable').append(`<td>${i+1}</td>`);
+                        $('#addtable').append(`<td>${parsedData.WorkerList[i]}</td>`);
+                        $('#addtable').append(`<td>${now.getFullYear() + "" + (now.getMonth() + 1) + now.getDate()}</td>`);
+                        $('#addtable').append(`<td>1일</td>`);
+                        $('#addtable').append(`<td>X</td>`);
+                        $('#addtable').append(`<td><a href='#'>Detail</a></td>`);
+                        $('#addtable').append(`</tr>`);
+                    }
+                }
+            })
+        })
+    </script>
+</body>

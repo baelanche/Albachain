@@ -30,6 +30,8 @@ docker ps -a
 docker images dev-*
 docker network ls
 
-
+# delete wallet
+ls ../application/wallet
+rm -rf ../application/wallet
 
 # Your system is now clean

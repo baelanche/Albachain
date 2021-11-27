@@ -10,17 +10,27 @@
             <div class="card-body">
                 <form id="frm" method="post" action="/workplace" class="was-validated">
                     <h5>지점을 선택해주세요.</h5>
+                    <input type="hidden" name="id" value=<%=user.id%>>
+                    <input type="hidden" name="uname" value=<%=user.name%>>
                     <select id="place" name="place" class="custom-select" style="margin-bottom:35px" required>
-                        <option value="025759284">강남구 개포대성점</option>
-                        <option value="0234120097">강남구 대청수성점</option>
-                        <option value="0260533123">강남구 BGF사옥점</option>
-                        <option value="025644486">강남구 삼성가멸점</option>
-                        <option value="07088715634">강남구 강남일원점</option>
+                        <option value="025759284/강남구 개포대성점">강남구 개포대성점</option>
+                        <option value="0234120097/강남구 대청수성점">강남구 대청수성점</option>
+                        <option value="0260533123/강남구 BGF사옥점">강남구 BGF사옥점</option>
+                        <option value="025644486/강남구 삼성가멸점">강남구 삼성가멸점</option>
+                        <option value="07088715634/강남구 강남일원점">강남구 강남일원점</option>
                     </select>
                     <h5>직급을 선택해주세요.</h5>
                     <select id="role" name="role" class="custom-select" style="margin-bottom:35px" required>
-                        <option value="025759284">알바생</option>
+                        <%if(user.role == 'worker'){%>
+                            <option value="0">알바생</option>
+                        <%}else{%>
+                            <option value="1">사장</option>
+                        <%}%>
                     </select>
+                        <%if(user.role == 'employer'){%>
+                        <h5>시급을 입력해주세요.</h5>
+                        <input type="text" name="wage" id="wage"/>
+                        <%}%>
                     <div class="btn-group float-right">
                         <button type="submit" class="btn btn-primary">요청하기</button>
                     </div>
