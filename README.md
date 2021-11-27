@@ -19,7 +19,7 @@ Blockchain work record management with Hyperledger fabric
     * install, instantiate, (test) ...
 4. run node enrollAdmin.js
 5. run node server.js
-    * You can register the user via website 'join'
+    * You can register the user via 'join' on web server
     * then, the wallet is created at `./application/wallet`
 
 ## Clean up after run
