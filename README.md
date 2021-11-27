@@ -12,6 +12,6 @@
 
 1. run ./teardown.sh
 2. clean the mongoDB
-    * $ sudo mongo
-    * > use test
-    * > db.users.remove({})
+    * `$ sudo mongo`
+    * `> use test`
+    * `> db.users.remove({})`
