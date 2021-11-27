@@ -9,6 +9,7 @@ Blockchain work record management with Hyperledger fabric
 * GOPATH are configured
     * `$ echo $PATH`
 * hyperledger bineries are installed (cryptogen, configtxgen ... etcs)
+* mongoDB
 
 ## How to run
 
