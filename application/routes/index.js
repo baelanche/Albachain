@@ -34,7 +34,6 @@ router.post('/', async (req,res)=>{
     const id = req.body.WorkerId;
     const walletPath = path.join(process.cwd(), 'wallet');
     const wallet = new FileSystemWallet(walletPath);
-    console.log(`Wallet path: ${walletPath}`);
 
     // Check to see if we've already enrolled the user.
     const userExists = await wallet.exists(id);
@@ -50,6 +49,7 @@ router.post('/', async (req,res)=>{
         const network = await gateway.getNetwork('mygreen');
         const contract = network.getContract('albachain');
         const result = await contract.evaluateTransaction('getWorker', id);
+        console.log('Get query');
         if (result == "" || result == undefined || result == null || result == 'undefined' || result == 'null') {
             res.status(200).json(result)
         } else {
@@ -62,6 +62,7 @@ router.post('/', async (req,res)=>{
         const network = await gateway.getNetwork('mygreen');
         const contract = network.getContract('albachain');
         const result = await contract.evaluateTransaction('getEmployer', id);
+        console.log('Get query');
         if (result == "" || result == undefined || result == null || result == 'undefined' || result == 'null') {
             res.status(200).json(result)
         } else {

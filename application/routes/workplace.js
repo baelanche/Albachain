@@ -63,6 +63,7 @@ router.post('/:id', async(req, res) => {
     const network = await gateway.getNetwork('mygreen');
     const contract = network.getContract('albachain');
     const result = await contract.evaluateTransaction('getWorkplace', wpid);
+    console.log('Get query');
     if (result == "" || result == undefined || result == null || result == 'undefined' || result == 'null') {
         res.status(200).json(result)
     } else {
