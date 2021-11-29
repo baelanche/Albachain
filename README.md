@@ -32,4 +32,4 @@ Blockchain work record management with Hyperledger fabric
 2. clean the mongoDB
     * `$ sudo mongo`
     * `> use test`
-    * `> db.users.remove({})`
+    * `> db.users.drop()` or `> db.users.remove({})`
