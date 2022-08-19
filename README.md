@@ -40,8 +40,9 @@ Blockchain work record management with Hyperledger fabric
 
 ### MongoDB 설치 오류
 
-해당 문제는 Ubuntu 의 버전에 따라 차이가 있다.  
-기존 Ubuntu 에 설치되어 있는 mongodb 와 설치하려는 mongodb 의 충돌로 인하여 동작이 제대로 되지 않을 때 수행한다.
+~~해당 문제는 Ubuntu 의 버전에 따라 차이가 있다.~~  
+~~기존 Ubuntu 에 설치되어 있는 mongodb 와 설치하려는 mongodb 의 충돌로 인하여 동작이 제대로 되지 않을 때 수행한다.~~  
+처음에 받은 이미지에 MongoDB 가 이미 설치되어 있었던 것으로 보인다. 버전 충돌로 인해 삭제 후 재설치했다.
 
 1. MongoDB 삭제
 ```
